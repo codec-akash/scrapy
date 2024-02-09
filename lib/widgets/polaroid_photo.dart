@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scarpbook/blocs/scrap_bloc.dart/scrap_bloc.dart';
 import 'package:scarpbook/models/scarph_photos_model.dart';
 import 'package:scarpbook/utils/extension_fucntion.dart';
 import 'package:scarpbook/widgets/image_widget.dart';
@@ -22,10 +24,45 @@ class PolaroidPhotoCard extends StatelessWidget {
           getTextWidget(context),
           const Spacer(),
         ],
-        PolaroidPhoto(
-          url: scarpBookPhoto.imageLink,
-          isEven: isEven,
-          polaroidTitle: scarpBookPhoto.polaroidTitle,
+        GestureDetector(
+          onDoubleTap: () async {
+            bool? res = await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Do you want to delete this ?"),
+                actions: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text("yes"),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text("No"),
+                    ),
+                  ),
+                ],
+              ),
+            );
+            if (res == true) {
+              context
+                  .read<ScrapBookBloc>()
+                  .add(DeleteScarpPhoto(scarpBookPhoto: scarpBookPhoto));
+            }
+          },
+          child: PolaroidPhoto(
+            url: scarpBookPhoto.imageLink,
+            isEven: isEven,
+            polaroidTitle: scarpBookPhoto.polaroidTitle,
+          ),
         ),
         if (isEven) ...[const Spacer(), getTextWidget(context)],
       ],

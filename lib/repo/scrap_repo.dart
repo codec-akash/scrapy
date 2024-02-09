@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:scarpbook/models/scarph_photos_model.dart';
 import 'package:scarpbook/screens/adding_image.dart';
 
 class ScrapRepo {
@@ -63,6 +64,20 @@ class ScrapRepo {
           "title": element.title,
         });
       }
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> deleteScrapPhoto(ScarpBookPhoto scrapPhoto) async {
+    try {
+      var ref = FirebaseStorage.instance
+          .ref()
+          .child("scrapImages")
+          .child("/${scrapPhoto.imageName}");
+
+      await ref.delete();
+      await scraphBookCollection.doc(scrapPhoto.id).delete();
     } catch (e) {
       throw e.toString();
     }

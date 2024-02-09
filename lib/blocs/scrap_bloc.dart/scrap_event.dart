@@ -26,3 +26,9 @@ class GetStreamScrapBook extends ScrapEvent {
 
   const GetStreamScrapBook({required this.scrapPhotos});
 }
+
+class DeleteScarpPhoto extends ScrapEvent {
+  final ScarpBookPhoto scarpBookPhoto;
+
+  const DeleteScarpPhoto({required this.scarpBookPhoto});
+}

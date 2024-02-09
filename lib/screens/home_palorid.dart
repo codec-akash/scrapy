@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scarpbook/blocs/scrap_bloc.dart/scrap_bloc.dart';
 import 'package:scarpbook/models/scarph_photos_model.dart';
 import 'package:scarpbook/screens/adding_image.dart';
-import 'package:scarpbook/widgets/image_widget.dart';
 import 'package:scarpbook/widgets/polaroid_photo.dart';
 
 class HomePolaroidScreen extends StatefulWidget {

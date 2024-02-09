@@ -43,3 +43,5 @@ class StreamScrapbookLoaded extends ScrapState {
 
   const StreamScrapbookLoaded({required this.scrapPhotos});
 }
+
+class ScrapPhotoDeleted extends ScrapState {}

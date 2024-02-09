@@ -33,6 +33,7 @@ class ScrapBookBloc extends Bloc<ScrapEvent, ScrapState> {
       emit(ScrapBookLoading(currentEvent: event));
       emit(StreamScrapbookLoaded(scrapPhotos: event.scrapPhotos));
     });
+    on<DeleteScarpPhoto>(_deleteScrapPhoto);
   }
 
   Future<void> _loadScrap(LoadScrap event, Emitter<ScrapState> emit) async {}
@@ -56,6 +57,17 @@ class ScrapBookBloc extends Bloc<ScrapEvent, ScrapState> {
       emit(ScrapBookLoading(currentEvent: event));
       await scrapRepo.uploadDataToFireStore(event.scrapDatas);
       emit(DataUploadedToFireStore());
+    } catch (e) {
+      emit(ScrapBookFailed(errorMsg: e.toString(), currentEvent: event));
+    }
+  }
+
+  Future<void> _deleteScrapPhoto(
+      DeleteScarpPhoto event, Emitter<ScrapState> emit) async {
+    try {
+      emit(ScrapBookLoading(currentEvent: event));
+      await scrapRepo.deleteScrapPhoto(event.scarpBookPhoto);
+      emit(ScrapPhotoDeleted());
     } catch (e) {
       emit(ScrapBookFailed(errorMsg: e.toString(), currentEvent: event));
     }
