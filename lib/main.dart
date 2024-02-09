@@ -1,21 +1,28 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:scarpbook/blocs/login_bloc/login_bloc.dart';
+import 'package:scarpbook/blocs/scrap_bloc.dart/scrap_bloc.dart';
+import 'package:scarpbook/env/env.dart';
+import 'package:scarpbook/models/scarph_photos_model.dart';
 import 'package:scarpbook/repo/auth_repo.dart';
+import 'package:scarpbook/screens/adding_image.dart';
+import 'package:scarpbook/screens/home_palorid.dart';
 import 'package:scarpbook/screens/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
-      apiKey: "AIzaSyBM0M2QYWOz4t5m5apXfM_PP0oc-225Naw",
-      appId: "1:768869366235:web:8204308eb817b784d70ffe",
-      messagingSenderId: "768869366235",
-      projectId: "scraphy-61676",
-      authDomain: "scraphy-61676.firebaseapp.com",
-      storageBucket: "scraphy-61676.appspot.com",
-      measurementId: "G-0GSTK2WYXF",
+      apiKey: Env.apikey,
+      appId: Env.appId,
+      messagingSenderId: Env.messageId,
+      projectId: Env.projectId,
+      authDomain: Env.authDomain,
+      storageBucket: Env.storageBucket,
+      measurementId: Env.measurementId,
     ),
   );
 
@@ -34,25 +41,31 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Scrapy',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginBloc>(create: (context) => LoginBloc(authRepo)),
+        BlocProvider<ScrapBookBloc>(create: (context) => ScrapBookBloc()),
+      ],
+      child: MaterialApp(
+        title: 'Scrapy',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+            brightness: Brightness.dark,
+          ),
+          useMaterial3: true,
+          scaffoldBackgroundColor: const Color(0xff141115),
           brightness: Brightness.dark,
         ),
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xff141115),
-        brightness: Brightness.dark,
-      ),
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider<LoginBloc>(create: (context) => LoginBloc(authRepo)),
-        ],
-        child: BlocBuilder<LoginBloc, LoginState>(
+        initialRoute: "/",
+        routes: {
+          '': (context) => LoginScreen(),
+          AddingImage.route: (context) => AddingImage(),
+        },
+        home: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
             if (state is LoggedInWithGoogle) {
-              return MyHomePage(title: "");
+              return HomePolaroidScreen() ?? MyHomePage(title: "");
             }
             return const LoginScreen();
           },
@@ -73,11 +86,34 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  ImagePicker imagePicker = ImagePicker();
+  List<XFile> pickedImage = [];
+  List<AddingWebImageModel> webImages = [];
+  List<ScarpBookPhoto> scrapPhotos = [];
 
   void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+    Navigator.of(context).pushNamed(AddingImage.route);
+  }
+
+  Future<void> pickImage() async {
+    List<XFile> files = await imagePicker.pickMultiImage();
+    if (files.isNotEmpty) {
+      pickedImage = files;
+
+      if (kIsWeb) {
+        for (var element in pickedImage) {
+          var byteData = await element.readAsBytes();
+          webImages.add(
+            AddingWebImageModel(
+              byteImage: byteData,
+              imageName: element.name,
+              imagePath: element.path,
+            ),
+          );
+        }
+      }
+      setState(() {});
+    }
   }
 
   @override
@@ -91,12 +127,43 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            BlocListener<ScrapBookBloc, ScrapState>(
+                listener: (context, state) {
+                  if (state is WebImagePostedToFirebaseStorage) {
+                    print("success -- ");
+                  }
+                  if (state is ScrapBookFailed) {
+                    print("state error -- ${state.errorMsg}");
+                  }
+                },
+                child: Container()),
             const Text(
               'You have pushed the button this many times:',
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Center(
+              child: GestureDetector(
+                onTap: () async {
+                  pickImage().then((value) {
+                    if (kIsWeb) {
+                      context.read<ScrapBookBloc>().add(
+                          PostWebImageToFirebaseStorage(
+                              webImageList: webImages));
+                    }
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  child: Text("Add images"),
+                ),
+              ),
             ),
           ],
         ),
