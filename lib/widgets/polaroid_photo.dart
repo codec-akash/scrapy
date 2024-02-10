@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scarpbook/blocs/scrap_bloc.dart/scrap_bloc.dart';
 import 'package:scarpbook/models/scarph_photos_model.dart';
+import 'package:scarpbook/utils/extension_fucntion.dart';
 import 'package:scarpbook/widgets/image_widget.dart';
 
 import 'dart:math' as math;
@@ -92,6 +93,17 @@ class PolaroidPhoto extends StatelessWidget {
 
   double get rotatedAngle => (math.pi / 24) * (isEven ? 1 : -1);
 
+  getWebSizes(BuildContext context) {
+    double widthSize = MediaQuery.of(context).size.width;
+    if (widthSize < 600) {
+      return 50;
+    } else if (widthSize > 600 && widthSize < 1500) {
+      return 80;
+    } else {
+      return 100;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -125,7 +137,7 @@ class PolaroidPhoto extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      height: 50,
+                      height: getWebSizes(context),
                       width: double.infinity,
                       alignment: Alignment.center,
                       decoration: const BoxDecoration(
