@@ -21,7 +21,7 @@ class ScarpBookPhoto {
 
   ScarpBookPhoto.fromJson(Map<String, dynamic> json) {
     createdAt = json['createdAt'];
-    imageDate = json['imageDate'];
+    imageDate = json['imageDate'] ?? DateTime.now().toIso8601String();
     imageLink = json['imageLink'];
     imageName = json['imageName'];
     userId = json['userId'];

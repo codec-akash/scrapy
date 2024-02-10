@@ -29,24 +29,24 @@ class PolaroidPhotoCard extends StatelessWidget {
             bool? res = await showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text("Do you want to delete this ?"),
+                title: const Text("Do you want to delete this ?"),
                 actions: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop(true);
                       },
-                      child: Text("yes"),
+                      child: const Text("yes"),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop(false);
                       },
-                      child: Text("No"),
+                      child: const Text("No"),
                     ),
                   ),
                 ],
@@ -72,7 +72,7 @@ class PolaroidPhotoCard extends StatelessWidget {
   Widget getTextWidget(BuildContext context) {
     return Expanded(
       flex: 3,
-      child: Text(
+      child: SelectableText(
         scarpBookPhoto.title ?? " ",
         style: Theme.of(context).textTheme.titleMedium,
       ),
@@ -116,10 +116,13 @@ class PolaroidPhoto extends StatelessWidget {
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
-                      child: ImageWidget.getImageWidget(
-                        url,
-                        height: context.getWidthAspectValue(500),
-                        fit: BoxFit.cover,
+                      child: Container(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: ImageWidget.getImageWidget(
+                          url,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Container(

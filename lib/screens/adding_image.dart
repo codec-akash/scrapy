@@ -45,148 +45,151 @@ class _AddingImageState extends State<AddingImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BlocListener<ScrapBookBloc, ScrapState>(
-              listener: (context, state) {
-                if (state is ScrapBookLoading &&
-                    state.currentEvent is PostWebImageToFirebaseStorage) {
-                  setState(() {
-                    isLoading = true;
-                  });
-                }
-                if (state is ScrapBookFailed) {
-                  context.showSnackBar(state.errorMsg);
-                  setState(() {
-                    isLoading = false;
-                  });
-                }
-                if (state is WebImagePostedToFirebaseStorage) {
-                  setState(() {
-                    isLoading = false;
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Container()),
-          SizedBox(
-            height: context.getHeightAspectValue(30),
-          ),
-          if (pickedImage.isEmpty) ...[
-            Center(
-              child: GestureDetector(
-                onTap: () async {
-                  await pickImage();
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlocListener<ScrapBookBloc, ScrapState>(
+                listener: (context, state) {
+                  if (state is ScrapBookLoading &&
+                      state.currentEvent is PostWebImageToFirebaseStorage) {
+                    setState(() {
+                      isLoading = true;
+                    });
+                  }
+                  if (state is ScrapBookFailed) {
+                    context.showSnackBar(state.errorMsg);
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
+                  if (state is WebImagePostedToFirebaseStorage) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Navigator.of(context).pop();
+                  }
                 },
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).primaryColor,
+                child: Container()),
+            SizedBox(
+              height: context.getHeightAspectValue(30),
+            ),
+            if (pickedImage.isEmpty) ...[
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    await pickImage();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: const Text("Add images"),
                   ),
-                  child: const Text("Add images"),
                 ),
               ),
-            ),
-          ],
-          if (pickedImage.isNotEmpty) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Column(
-                children: webImages
-                    .map(
-                      (image) => Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              width: context.getWidthAspectValue(240),
-                              child: Image.memory(image.byteImage),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  TextField(
-                                    maxLines: 2,
-                                    onChanged: (value) {
-                                      image.title = value;
-                                    },
-                                    decoration: InputDecoration(
-                                        hintText:
-                                            "want to something about this post ??",
-                                        hintStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(color: Colors.white24)),
-                                  ),
-                                  TextField(
-                                    maxLength: 60,
-                                    onChanged: (value) {
-                                      image.polaroidTitle = value;
-                                    },
-                                    decoration: InputDecoration(
-                                        hintText: "polaroid title ?",
-                                        hintStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(color: Colors.white24)),
-                                  ),
-                                  GestureDetector(
-                                    child: image.imageDate != null
-                                        ? Text(
-                                            DateTimeUtil.dateFormatToDateTime(
-                                                image.imageDate!))
-                                        : const Text("select date time"),
-                                    onTap: () async {
-                                      DateTime? date =
-                                          await DatePicker.showDateTimePicker(
-                                              context);
-                                      if (date != null) {
-                                        setState(() {
-                                          image.imageDate = date;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ],
+            ],
+            if (pickedImage.isNotEmpty) ...[
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Column(
+                  children: webImages
+                      .map(
+                        (image) => Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                width: context.getWidthAspectValue(240),
+                                child: Image.memory(image.byteImage),
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    TextField(
+                                      maxLines: 2,
+                                      onChanged: (value) {
+                                        image.title = value;
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText:
+                                              "want to something about this post ??",
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(color: Colors.white24)),
+                                    ),
+                                    TextField(
+                                      maxLength: 60,
+                                      onChanged: (value) {
+                                        image.polaroidTitle = value;
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: "polaroid title ?",
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(color: Colors.white24)),
+                                    ),
+                                    GestureDetector(
+                                      child: image.imageDate != null
+                                          ? Text(
+                                              DateTimeUtil.dateFormatToDateTime(
+                                                  image.imageDate!))
+                                          : const Text("select date time"),
+                                      onTap: () async {
+                                        DateTime? date =
+                                            await DatePicker.showDateTimePicker(
+                                                context);
+                                        if (date != null) {
+                                          setState(() {
+                                            image.imageDate = date;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            )
-          ],
-          if (webImages.isNotEmpty) ...[
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  context.read<ScrapBookBloc>().add(
-                      PostWebImageToFirebaseStorage(webImageList: webImages));
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).primaryColor,
+                      )
+                      .toList(),
+                ),
+              )
+            ],
+            if (webImages.isNotEmpty) ...[
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    context.read<ScrapBookBloc>().add(
+                        PostWebImageToFirebaseStorage(webImageList: webImages));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : Text("Post Images"),
                   ),
-                  child: isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : Text("Post Images"),
                 ),
               ),
-            ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -57,7 +57,8 @@ class ScrapRepo {
         await scraphBookCollection.add({
           "imageLink": element.imagePath,
           "imageName": element.imageName,
-          "imageDate": element.imageDate?.toIso8601String(),
+          "imageDate": element.imageDate?.toIso8601String() ??
+              DateTime.now().toIso8601String(),
           "createdAt": DateTime.now().toIso8601String(),
           "userId": FirebaseAuth.instance.currentUser!.uid,
           "polaroidTitle": element.polaroidTitle,
