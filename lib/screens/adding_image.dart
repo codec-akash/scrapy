@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scarpbook/blocs/scrap_bloc.dart/scrap_bloc.dart';
-import 'package:scarpbook/models/scarph_photos_model.dart';
 import 'package:scarpbook/utils/date_format_util.dart';
 import 'package:scarpbook/utils/extension_fucntion.dart';
 

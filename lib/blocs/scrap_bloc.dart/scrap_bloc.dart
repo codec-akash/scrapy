@@ -19,7 +19,7 @@ class ScrapBookBloc extends Bloc<ScrapEvent, ScrapState> {
       if (snapshot.docs.isNotEmpty) {
         add(GetStreamScrapBook(
             scrapPhotos: snapshot.docs
-                .map((scrapPhoto) => ScarpBookPhoto.fromJson(
+                .map((scrapPhoto) => ScrapBookPhoto.fromJson(
                     scrapPhoto.data() as Map<String, dynamic>)
                   ..id = scrapPhoto.id)
                 .toList()));
@@ -34,6 +34,7 @@ class ScrapBookBloc extends Bloc<ScrapEvent, ScrapState> {
       emit(StreamScrapbookLoaded(scrapPhotos: event.scrapPhotos));
     });
     on<DeleteScarpPhoto>(_deleteScrapPhoto);
+    on<UpdateScrapPhoto>(_updateScrapPhoto);
   }
 
   Future<void> _loadScrap(LoadScrap event, Emitter<ScrapState> emit) async {}
@@ -68,6 +69,17 @@ class ScrapBookBloc extends Bloc<ScrapEvent, ScrapState> {
       emit(ScrapBookLoading(currentEvent: event));
       await scrapRepo.deleteScrapPhoto(event.scarpBookPhoto);
       emit(ScrapPhotoDeleted());
+    } catch (e) {
+      emit(ScrapBookFailed(errorMsg: e.toString(), currentEvent: event));
+    }
+  }
+
+  Future<void> _updateScrapPhoto(
+      UpdateScrapPhoto event, Emitter<ScrapState> emit) async {
+    try {
+      emit(ScrapBookLoading(currentEvent: event));
+      await scrapRepo.updateScrapPhoto(event.scrapBookPhoto);
+      emit(ScrapPhotoUpdated());
     } catch (e) {
       emit(ScrapBookFailed(errorMsg: e.toString(), currentEvent: event));
     }

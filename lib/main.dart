@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         home: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
             if (state is LoggedInWithGoogle) {
-              return HomePolaroidScreen() ?? MyHomePage(title: "");
+              return HomePolaroidScreen();
             }
             return const LoginScreen();
           },
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ImagePicker imagePicker = ImagePicker();
   List<XFile> pickedImage = [];
   List<AddingWebImageModel> webImages = [];
-  List<ScarpBookPhoto> scrapPhotos = [];
+  List<ScrapBookPhoto> scrapPhotos = [];
 
   void _incrementCounter() {
     Navigator.of(context).pushNamed(AddingImage.route);

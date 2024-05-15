@@ -70,7 +70,7 @@ class ScrapRepo {
     }
   }
 
-  Future<void> deleteScrapPhoto(ScarpBookPhoto scrapPhoto) async {
+  Future<void> deleteScrapPhoto(ScrapBookPhoto scrapPhoto) async {
     try {
       var ref = FirebaseStorage.instance
           .ref()
@@ -79,6 +79,14 @@ class ScrapRepo {
 
       await ref.delete();
       await scraphBookCollection.doc(scrapPhoto.id).delete();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> updateScrapPhoto(ScrapBookPhoto scrapPhoto) async {
+    try {
+      await scraphBookCollection.doc(scrapPhoto.id).update(scrapPhoto.toJson());
     } catch (e) {
       throw e.toString();
     }

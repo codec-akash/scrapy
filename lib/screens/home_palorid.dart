@@ -13,7 +13,7 @@ class HomePolaroidScreen extends StatefulWidget {
 }
 
 class _HomePolaroidScreenState extends State<HomePolaroidScreen> {
-  List<ScarpBookPhoto> scrapBookPhoto = [];
+  List<ScrapBookPhoto> scrapBookPhoto = [];
 
   @override
   Widget build(BuildContext context) {
