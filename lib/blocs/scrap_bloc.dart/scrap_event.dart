@@ -22,13 +22,19 @@ class AddUploadedDataToFireStore extends ScrapEvent {
 }
 
 class GetStreamScrapBook extends ScrapEvent {
-  final List<ScarpBookPhoto> scrapPhotos;
+  final List<ScrapBookPhoto> scrapPhotos;
 
   const GetStreamScrapBook({required this.scrapPhotos});
 }
 
 class DeleteScarpPhoto extends ScrapEvent {
-  final ScarpBookPhoto scarpBookPhoto;
+  final ScrapBookPhoto scarpBookPhoto;
 
   const DeleteScarpPhoto({required this.scarpBookPhoto});
+}
+
+class UpdateScrapPhoto extends ScrapEvent {
+  final ScrapBookPhoto scrapBookPhoto;
+
+  const UpdateScrapPhoto({required this.scrapBookPhoto});
 }

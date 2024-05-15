@@ -39,9 +39,11 @@ class WebImagePostedToFirebaseStorage extends ScrapState {
 class DataUploadedToFireStore extends ScrapState {}
 
 class StreamScrapbookLoaded extends ScrapState {
-  final List<ScarpBookPhoto> scrapPhotos;
+  final List<ScrapBookPhoto> scrapPhotos;
 
   const StreamScrapbookLoaded({required this.scrapPhotos});
 }
 
 class ScrapPhotoDeleted extends ScrapState {}
+
+class ScrapPhotoUpdated extends ScrapState {}

@@ -1,4 +1,4 @@
-class ScarpBookPhoto {
+class ScrapBookPhoto {
   late String createdAt;
   late String imageDate;
   late String imageLink;
@@ -8,7 +8,7 @@ class ScarpBookPhoto {
   late String? title;
   late String? polaroidTitle;
 
-  ScarpBookPhoto({
+  ScrapBookPhoto({
     required this.createdAt,
     required this.imageDate,
     required this.imageLink,
@@ -19,7 +19,7 @@ class ScarpBookPhoto {
     this.polaroidTitle,
   });
 
-  ScarpBookPhoto.fromJson(Map<String, dynamic> json) {
+  ScrapBookPhoto.fromJson(Map<String, dynamic> json) {
     createdAt = json['createdAt'];
     imageDate = json['imageDate'] ?? DateTime.now().toIso8601String();
     imageLink = json['imageLink'];
@@ -37,6 +37,7 @@ class ScarpBookPhoto {
     data['imageName'] = imageName;
     data['userId'] = userId;
     data['title'] = title;
+    data['polaroidTitle'] = polaroidTitle;
     return data;
   }
 }

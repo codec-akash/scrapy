@@ -1,14 +1,14 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scarpbook/blocs/scrap_bloc.dart/scrap_bloc.dart';
 import 'package:scarpbook/models/scarph_photos_model.dart';
-import 'package:scarpbook/utils/extension_fucntion.dart';
+import 'package:scarpbook/screens/update_post.dart';
 import 'package:scarpbook/widgets/image_widget.dart';
 
-import 'dart:math' as math;
-
 class PolaroidPhotoCard extends StatelessWidget {
-  final ScarpBookPhoto scarpBookPhoto;
+  final ScrapBookPhoto scarpBookPhoto;
   final bool isEven;
   const PolaroidPhotoCard({
     super.key,
@@ -53,10 +53,17 @@ class PolaroidPhotoCard extends StatelessWidget {
               ),
             );
             if (res == true) {
-              context
-                  .read<ScrapBookBloc>()
-                  .add(DeleteScarpPhoto(scarpBookPhoto: scarpBookPhoto));
+              if (context.mounted) {
+                context
+                    .read<ScrapBookBloc>()
+                    .add(DeleteScarpPhoto(scarpBookPhoto: scarpBookPhoto));
+              }
             }
+          },
+          onLongPress: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    UpdateScrapPost(scrapBookPhoto: scarpBookPhoto)));
           },
           child: PolaroidPhoto(
             url: scarpBookPhoto.imageLink,
